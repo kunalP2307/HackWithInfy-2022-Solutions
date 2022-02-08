@@ -26,8 +26,6 @@ public class Sample {
 		int xLen = arr[0].length();
 		int yLen = arr[1].length();
 		
-	
-		
 		if(xLen == 1 && yLen == 1) {
 			if(toInt(arr[0]) == toInt(arr[1]))
 				return 0;
@@ -41,9 +39,11 @@ public class Sample {
 		
 		String newExpression = "";
 		
-		int minPlus = temp(arr[0],Integer.parseInt(arr[1]), 3);
-		System.out.println("count"+minPlus);
-		return -1;
+		int minPlus = temp(arr[0],Integer.parseInt(arr[1]), Integer.parseInt(binString,2));
+		
+		System.out.println("Min No of Pluses Required : "+minPlus);
+		
+		return minPlus;
 	}
 	
 	public static int temp(String expression,int y,int plusSequence) {
@@ -56,7 +56,7 @@ public class Sample {
 			
 			String temp = ""+expression.charAt(0);
 			String binSeq = Integer.toBinaryString(i);
-			System.out.println(binSeq);
+			//System.out.println(binSeq);
 			int x = 1;
 			int plusCount = 0;
 			
@@ -64,65 +64,44 @@ public class Sample {
 				
 				if(binSeq.length() < n) {
 					binSeq = '0'+binSeq;
-					plusCount ++;
 				}
 				
 				if(binSeq.charAt(j+1) == '1') {
 					temp += "+";
 					temp += expression.charAt(x);
+					plusCount ++;
 					x++;
 				}
 				else if(binSeq.charAt(j+1) == '0') {
 					temp += expression.charAt(x);
 					x++;
-				}			
-					
+				}					
 			}
 			
-			int sum = 0;
-			String[] arr = temp.split("\\+");
-			System.out.print("length "+arr.length);
-			for(int k=0; k<arr.length; k++) {
-				sum += Integer.parseInt(arr[k]);
-			}
-		
-			
-			if(sum == y) 
+			if(checkSum(temp, y)) 
 				setOfPlusCount.add(plusCount);
-			
-			
+						
 		}
 		if(setOfPlusCount.size() == 0)
 			return -1;
 		return Collections.min(setOfPlusCount);		
 	}
 	
-	public static String addPluses(String expression,int plusSequence) {
+	public static boolean checkSum(String expression,int y) {
 		
-		for(int i=plusSequence; i>=1; i--) {
+		int sum = 0;
+		System.out.println("Expression : "+expression);
+		String nums[] = expression.split("\\+");
+		for(int i=0; i<nums.length; i++)
+			sum += toInt(nums[i]);
+		
+		System.out.println("Sum : "+sum);
+		if(sum == y)
+			return true;
+		
+		return false;
 			
-			String binSeq = Integer.toBinaryString(i);
-			
-			String temp = ""+expression.charAt(0);
-			int x = 1;
-			for(int j=0; j<binSeq.length(); j++) {
-				
-				if(binSeq.charAt(j) == '1')
-					temp += '+';
-				else if(binSeq.charAt(j) == '0') {
-					temp += expression.charAt(x);
-					x++;
-				}
-				else {
-					temp += expression.charAt(x);
-					x++;
-				}	
-			}	
-			System.out.println(temp);
-		}
-		return "";		
 	}
-	
 	
 	public static int toInt(String str) {
 		return Integer.parseInt(str);
@@ -132,12 +111,19 @@ public class Sample {
 		
 		Scanner sc = new Scanner(System.in);
 		
-		String expression = sc.next();
 		
 		Sample s = new Sample();
-		System.out.print(s.checkNoOfPluses(expression));
+		String expression;
 		
-		
+		while(true) {
+			expression = sc.next();
+			s.checkNoOfPluses(expression);	
+			
+			System.out.print("Do You want to continue [y/n] : [1/0] : ");
+			if(sc.nextInt() != 1)
+				break;
+			
+		}
 	}
 
 }
